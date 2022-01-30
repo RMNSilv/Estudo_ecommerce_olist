@@ -1,0 +1,26 @@
+ESTE DASHBOARD FOI DESENVOLVIDO A PARTIR DE DADOS PÚBLICOS DO E-COMMERCE NO BRASIL, DISPONIBILIZADOS NA PLATAFORMA KAGGLE, VOLTADA PARA O APRENDIZADO E PRÁTICA DE ATIVIDADES 
+VOLTADAS À CIÊNCIA DE DADOS.
+
+Sobre o projeto
+
+As bases disponibilizadas neste dataset possuem as mais diversas informações relacionadas ao e-commerce (Vendas, localizações, tipos de produtos, pagamentos, etc), no entanto, 
+para este estudo limitei o escopo dos assuntos pesquisados para que se tenha informações e dados de forma mais objetiva e precisa.
+
+
+Com isso, este estudo teve como objetivo simular o levantamento de dados mais voltados a questões de entregas e fretes visando dar sustento na tomada de decisões que sejam relacionadas a, 
+por exemplo, realização de projetos que busquem atrair vendedores em estados com menor quantidade destes ou mesmo entender qual a participação que o valor de frete tem nas vendas da plataforma.
+
+
+Logo, neste estudo poderemos observar algumas informações como:
+
+Total de vendaz por Estado do Brasil
+Valor médio de compras no e-commerce no período estudado
+Participação do frete no valor das vendas
+Estados com maior número de compras no e-commerce
+Entre outras.
+
+
+
+
+
+
