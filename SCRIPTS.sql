@@ -39,6 +39,7 @@ left join olist.pedidos p on c.customer_id = p.customer_id
 group by 1
 order by 2 desc;
 
+
 # Quais cidades com maiores médias no valor do pedido?
 
 # Na tabela itens, podemos perceber que cada linha é o item de um pedido, com isso, um pedido pode aparecer 
@@ -138,7 +139,6 @@ Alter table olist.distancia_entregas
 add column categoria_distancia varchar(15);
 
 set sql_safe_updates = 0;
-
 
 update olist.distancia_entregas
 set categoria_distancia =
