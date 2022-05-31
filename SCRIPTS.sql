@@ -1,10 +1,10 @@
-#Quais as cidades com maiores quantidades de pedidos?
+# Quais as cidades com maiores quantidades de pedidos?
 
-#Para responder a esta pergunta, irei utilizar as tabelas clientes e pedidos, dado que na tabela clientes, 
+# Para responder a esta pergunta, irei utilizar as tabelas clientes e pedidos, dado que na tabela clientes, 
 #entre outras informações, encontramos suas cidades e estados, e com isso, conseguimos fazer sua junção com 
 #a tabela pedidos através da chave customer_id.
 
-#Antes de começar, é importante fazermos a verificação de valores nulos na coluna customer_id das duas tabelas
+# Antes de começar, é importante fazermos a verificação de valores nulos na coluna customer_id das duas tabelas
 #para que não tenhamos problemas na hora de uni-las. 
 
 select customer_unique_id, count(distinct customer_unique_id) as soma_nulos from olist.clientes
@@ -17,9 +17,9 @@ where customer_id is null
 group by 1
 order by 2 desc;
 
-#Logo, pode-se verificar a não existência de valores nulos na coluna customer_id
+# Logo, pode-se verificar a não existência de valores nulos na coluna customer_id
 
-#Agora, vamos verificar se há linhas duplicadas nas duas bases
+# Agora, vamos verificar se há linhas duplicadas nas duas bases
 
 select customer_id, count(*) from olist.clientes
 group by 1
@@ -29,9 +29,9 @@ select order_id, count(*) from olist.pedidos
 group by 1
 order by 2 desc;
 
-#O que também nos mostra que não há valores duplicados em ambas as tabelas
+# O que também nos mostra que não há valores duplicados em ambas as tabelas
 
-#E agora faremos a consulta das duas tabelas a fim de responder a primeira pergunta no case.
+# E agora faremos a consulta das duas tabelas a fim de responder a primeira pergunta no case.
 
 select CONCAT(upper(substr(customer_city,1))," - ", customer_state) AS CIDADE, count(distinct order_id) AS TOTAL 
 from olist.clientes c
@@ -39,10 +39,10 @@ left join olist.pedidos p on c.customer_id = p.customer_id
 group by 1
 order by 2 desc;
 
-#Quais cidades com maiores médias no valor do pedido?
+# Quais cidades com maiores médias no valor do pedido?
 
-#Na tabela itens, podemos perceber que cada linha é o item de um pedido, com isso, um pedido pode aparecer 
-#em várias linhas, sendo o que diferencia uma da outra é o item do pedido (identificado pela coluna order_item_id).
+# Na tabela itens, podemos perceber que cada linha é o item de um pedido, com isso, um pedido pode aparecer 
+# em várias linhas, sendo o que diferencia uma da outra é o item do pedido (identificado pela coluna order_item_id).
 
 With mediavalue (cidades_clientes, estado_clientes, total_pedidos, contagem_pedidos) as
 (
@@ -60,9 +60,9 @@ select *, total_pedidos/contagem_pedidos as media_valor
 from mediavalue;
 
 
-#O frete representa quanto do valor do pedido?
+# O frete representa quanto do valor do pedido?
 
-#Para responder a esta pergunta, foi preciso utilizar a tabela itens onde se encontram os valores envolvidos
+# Para responder a esta pergunta, foi preciso utilizar a tabela itens onde se encontram os valores envolvidos
 #Primeiramente, na tabela itens foi feito o levantamento do total pago em cada item, bem como o valor de frete 
 #envolvido. Para encontrar o estes valores totais, foi preciso fazer a soma deles por pedido visto que cada linha 
 #desta representa 1 item de cada pedido, assim como o valor de seu respectivo frete.
@@ -80,9 +80,9 @@ select *, round((frete_itens/(valor_itens+frete_itens))*100,2) as porcent_frete
 from percentfrete
 order by 2);
 
-#Como se dá a distribuição da distância entre os vendedores e os compradores?
+# Como se dá a distribuição da distância entre os vendedores e os compradores?
 
-#Nesta análise, será utilizada inicialmente a tabela de geolocalizações fornecida no dataset e, em seguida,
+# Nesta análise, será utilizada inicialmente a tabela de geolocalizações fornecida no dataset e, em seguida,
 #cruzada com as tabelas de clientes e vendedores com o objetivo de determinar suas respectivas localizações.
 #A tabela de localizações é formada por prefixo de CEPs do país e sus coordenadas geográficas (Latitude e Longitude)
 #No entanto, o que se pode observar é que um CEP pode possuir mais de um par de coordenadas dado que uma rua não é somente
@@ -94,7 +94,7 @@ select geolocation_zip_code_prefix, avg(geolocation_lat) as latitude, avg(geoloc
 from olist.localizacoes
 group by 1);
 
-#Neste trecho está sendo obtido o par de coordenadas dos pedidos realizados,a partir do cruzamento da tabela de pedidos
+# Neste trecho está sendo obtido o par de coordenadas dos pedidos realizados,a partir do cruzamento da tabela de pedidos
 #com a tabela de localizações, utilizando como chave o prefixo dos CEPS, o qual foi obtido na tabela de clientes. 
 #Outro ponto a se observar é que foram utilizados pedidos com status de entregue ou enviado, pois a análise está
 #concentrada apenas nas entregas realmente realizadas ou em transporte. 
@@ -107,7 +107,7 @@ join olist.clientes t on p.customer_id = t.customer_id
 where p.order_status = "delivered" or p.order_status= "shipped") o  
 join olist.local_media l on o.customer_zip_code_prefix = l.geolocation_zip_code_prefix);
 
-#Aqui, fora realizado procedimento similar para obtenção das coordenadas dos clientes, porém agora iremos obter as localizações
+# Aqui, fora realizado procedimento similar para obtenção das coordenadas dos clientes, porém agora iremos obter as localizações
 #dos vendedores cadatrados.
 
 create table olist.vendedores_loc(
@@ -117,7 +117,7 @@ from olist.itens i
 left join olist.vendedores s on i.seller_id = s.seller_id) a
 join olist.local_media l on a.seller_zip_code_prefix = l.geolocation_zip_code_prefix);
 
-#Obtidas as localizações de vendedores e clientes, vamos calcular a distância entre eles, nos pedidos realizados.
+# Obtidas as localizações de vendedores e clientes, vamos calcular a distância entre eles, nos pedidos realizados.
 #Para isto, utlizei a fórmula de Haversine,a qual é frenquentemente utilizada na navegação para cálculo da distância entre
 #dois pontos de uma esfera a partir de suas coordenadas, logo, podemos utlizá-la ao aproximar a Terra como uma esfera.
 create table olist.distancia_entregas(
@@ -126,12 +126,12 @@ round(6371*2*asin(sqrt(pow(SIN(radians((y.latitude-x.latitude)/2)),2) + COS(radi
 from olist.pedidos_loc x
 join olist.vendedores_loc y on x.order_id = y.order_id);
 
-#Calculadaas as distâncias, vamos agora agrupar as distâncias em categorias a partir de determinados intervalos
+# Calculadaas as distâncias, vamos agora agrupar as distâncias em categorias a partir de determinados intervalos
 #Podemos iniciar descobrindo-se a menor e maior distancia para então definir os intervalos.
 
 select min(distancia) as menor_distancia, max(distancia) as maior_distancia from olist.distancia_entregas;
 
-#Neste trecho, incluímos uma coluna na tabela de distâncias das entregas para em seguida preenche-las com as 
+# Neste trecho, incluímos uma coluna na tabela de distâncias das entregas para em seguida preenche-las com as 
 #respectivas categorias. 
 
 Alter table olist.distancia_entregas
@@ -151,10 +151,10 @@ case
     
     set sql_safe_updates = 1;
     
-#Qual o tempo médio Real e estimado de entregas por categorias de distâncias?
+# Qual o tempo médio Real e estimado de entregas por categorias de distâncias?
 
-#A partir da tabela de pedidos iremos calcular os tempos de entrega por pedido.
-#Estes cálculos serão realizados através da diferenças entre as datas de compra e entrega e entre as datas estimada de entrega e de compra
+# A partir da tabela de pedidos iremos calcular os tempos de entrega por pedido.
+# Estes cálculos serão realizados através da diferenças entre as datas de compra e entrega e entre as datas estimada de entrega e de compra
 
 with tempoentregs(order_id,tempo_de_entrega,estm_entrega) as
 (
